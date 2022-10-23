@@ -1,26 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Header } from './components/Header/Header';
+import { TodoPanel } from './components/TodoPanel/TodoPanel';
 
-function App() {
+const DEFAULT_TODO_LIST = [
+  { id: 1, name: 'task 1', description: 'description 1', checked: false },
+  { id: 2, name: 'task 2', description: 'description 2', checked: false },
+  {
+    id: 3,
+    name: 'task 3',
+    description:
+      'so long task description 3 so long task description so long task description so long task description so long task description',
+    checked: true
+  }
+];
+
+export const App = () => {
+  const [todos, setTodos] = React.useState(DEFAULT_TODO_LIST);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div>
+        <Header todoCount={todos.length}/>
+        <TodoPanel />
+      </div>
     </div>
   );
-}
+};
 
-export default App;
