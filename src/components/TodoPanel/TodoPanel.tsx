@@ -1,28 +1,43 @@
-import React from 'react'
-import { Button } from '../Button/Button'
+import React from 'react';
 
-import styles from './TodoPanel.module.css'
+import { Button } from '../Button/Button';
+
+import styles from './TodoPanel.module.css';
 
 const DEFAULT_TODO = {
     name: '',
     description: ''
 }
 
-interface TodoPanelProps {
-    addTodo: ({name, description}: Omit<Todo, 'checked' | 'id'>) => void;
+interface AddTodoPanelProps {
+    mode: 'add';
+    addTodo: ({name, description}: Omit<Todo, 'checked' | 'id'>) => void
 }
 
-export const TodoPanel: React.FC<TodoPanelProps> = ({addTodo}) => {
-    const [todo, setTodo] = React.useState(DEFAULT_TODO)
+interface EditTodoPanelProps {
+    mode: 'edit';
+    editTodo: Omit<Todo, 'id' | 'checked'>;
+    changeTodo: ({name, description}: Omit<Todo, 'checked' | 'id'>) => void
+}
+
+type TodoPanelProps = AddTodoPanelProps | EditTodoPanelProps;
+
+export const TodoPanel: React.FC<TodoPanelProps> = (props) => {
+    const isEdit = props.mode === 'edit';
+    const [todo, setTodo] = React.useState(isEdit ? props.editTodo : DEFAULT_TODO);
     
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = event.target
+        const {name, value} = event.target;
         setTodo({ ...todo, [name]: value })
     }
 
     const onClick = () => {
-        addTodo({name: todo.name, description: todo.description})
-        setTodo(DEFAULT_TODO)
+        const todoItem = {name: todo.name, description: todo.description};
+        if (isEdit) {
+            return props.changeTodo(todoItem)
+        }
+        props.addTodo(todoItem);
+        setTodo(DEFAULT_TODO);
     }
 
     return (
@@ -41,9 +56,16 @@ export const TodoPanel: React.FC<TodoPanelProps> = ({addTodo}) => {
                     </label> 
                 </div>
                 <div className={styles.button_container}>
-                    <Button color='blue' onClick={onClick}>
-                        ADD
-                    </Button>
+                    {!isEdit && (
+                        <Button color='blue' onClick={onClick}>
+                            ADD
+                        </Button>
+                    )}
+                    {isEdit && (
+                        <Button color='orange' onClick={onClick}>
+                            EDIT
+                        </Button>
+                    )}
                 </div>
             </div>
         </div>

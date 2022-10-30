@@ -1,9 +1,9 @@
 import React from 'react';
 
-import styles from './Header.module.css'
+import styles from './Header.module.css';
 
 interface HeaderProps {
-    todoCount: number;
+    todoCount: number
 }
 
 export const Header: React.FC<HeaderProps> = ({todoCount}) => (
